@@ -1,11 +1,12 @@
 "use client";
 
-import AddComment from "@/app/components/AddComment";
-import Post from "@/app/components/Post";
-import { PostType } from "@/app/types/Post";
+// import Post from "../../Post";
+import Post from "../../components/Post";
+import AddComment from "../../components/AddComment";
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Image from "next/image";
+import { PostType } from "../../types/Post";
 
 type URL = {
   params: {
@@ -35,7 +36,7 @@ export default function PostDetail(url: URL) {
         comments={data.Comment}
       />
       <AddComment id={data?.id} />
-      {data?.Comment?.map((comment) => (
+      {data?.Comment?.map((comment: any) => (
         <div className="my-6 bg-white p-8 rounded-md" key={comment.id}>
           <div className="flex items-center gap-2">
             <Image
