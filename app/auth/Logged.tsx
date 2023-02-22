@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import Image from "next/image";
 
 type User = {
   image: string;
@@ -12,8 +12,8 @@ export default function Logged({ image }: User) {
   return (
     <li className="flex gap-8 items-center">
       <button
+        className="bg-gray-700 text-white text-sm px-6 py-2 rounded-md "
         onClick={() => signOut()}
-        className="text-sm bg-gray-700 text-white py-2 px-6 rounded-xl"
       >
         Sign Out
       </button>
@@ -23,7 +23,7 @@ export default function Logged({ image }: User) {
           height={64}
           className="w-14 rounded-full"
           src={image}
-          alt="google profile image"
+          alt=""
           priority
         />
       </Link>

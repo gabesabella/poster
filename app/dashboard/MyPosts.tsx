@@ -1,24 +1,25 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import EditPost from "./EditPost";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { AuthPosts } from "../types/AuthPosts";
-import EditPost from "./EditPost";
 
 const fetchAuthPosts = async () => {
   const response = await axios.get("/api/posts/authPosts");
   return response.data;
 };
 
-export default function MyPosts() {
-  const { data, isLoading } = useQuery<AuthPosts>({
-    queryFn: fetchAuthPosts,
-    queryKey: ["auth-posts"],
-  });
+export default function MyPosts(): JSX.Element {
+  const { data, isLoading } = useQuery<AuthPosts>(
+    "getAuthPosts",
+    fetchAuthPosts
+  );
   if (isLoading) return <h1>Posts are loading...</h1>;
-  console.log(data);
+  if (data) console.log(data);
   return (
     <div>
+      test
       {data?.Post?.map((post) => (
         <EditPost
           id={post.id}

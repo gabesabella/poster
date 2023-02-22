@@ -1,35 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-
-type PostProps = {
-  id?: string;
-};
 
 type Comment = {
   postId?: string;
   title: string;
 };
-
+type PostProps = {
+  id?: string;
+};
 export default function AddComment({ id }: PostProps) {
+  let commentToastId: string;
+  console.log(id);
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  const queryClient = useQueryClient();
-  let commentToastId: string;
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation(
-    async (data: Comment) => axios.post("/api/posts/addComment", { data }),
+    async (data: Comment) => {
+      return axios.post("/api/posts/addComment", { data });
+    },
     {
       onSuccess: (data) => {
+        queryClient.invalidateQueries(["detail-post"]);
         setTitle("");
         setIsDisabled(false);
-        queryClient.invalidateQueries(["detail-post"]);
         toast.success("Added your comment", { id: commentToastId });
       },
       onError: (error) => {
+        console.log(error);
         setIsDisabled(false);
         if (error instanceof AxiosError) {
           toast.error(error?.response?.data.message, { id: commentToastId });
@@ -38,7 +40,7 @@ export default function AddComment({ id }: PostProps) {
     }
   );
 
-  const submitComment = async (e: React.FormEvent) => {
+  const submitPost = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsDisabled(true);
     commentToastId = toast.loading("Adding your comment", {
@@ -47,8 +49,9 @@ export default function AddComment({ id }: PostProps) {
     mutate({ title, postId: id });
   };
   return (
-    <form onSubmit={submitComment} className="my-8">
-      <h3>Add a comment</h3>
+    <form onSubmit={submitPost} className="my-8">
+      <h3 className="text-xl">Add a comment</h3>
+
       <div className="flex flex-col my-2">
         <input
           onChange={(e) => setTitle(e.target.value)}
@@ -58,22 +61,19 @@ export default function AddComment({ id }: PostProps) {
           className="p-4 text-lg rounded-md my-2"
         />
       </div>
-
-      <div className="flex items-center justify-between gap-2">
-        <p
-          className={`font-bold text-sm ${
-            title.length > 300 ? "text-red-500" : "text-gray-700"
-          }`}
-        >
-          {`${title.length}`}/300
-        </p>
+      <div className="flex items-center gap-2">
         <button
           disabled={isDisabled}
+          className=" text-sm bg-teal-600 text-white py-2 px-6 rounded-xl disabled:opacity-25"
           type="submit"
-          className="text-sm bg-teal-600 text-white py-2 px-6 rounded-xl disabled:opacity-25"
         >
-          Post Comment
+          Add Comment 🚀
         </button>
+        <p
+          className={`font-bold  ${
+            title.length > 300 ? "text-red-700" : "text-gray-700"
+          } `}
+        >{`${title.length}/300`}</p>
       </div>
     </form>
   );
