@@ -35,7 +35,7 @@ export default function EditPost({
       await axios.delete("/api/posts/deletePost", { data: id }),
     {
       onError: (error) => {
-        console.log(error);
+        console.log("didnt work");
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries("getAuthPosts");
