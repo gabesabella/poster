@@ -14,7 +14,6 @@ type PostProps = {
 };
 export default function AddComment({ id }: PostProps) {
   let commentToastId: string;
-  console.log(id);
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
 
